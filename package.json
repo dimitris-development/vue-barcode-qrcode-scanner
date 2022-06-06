@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-sfc-rollup": "^4.1.1"
+  }
+}
