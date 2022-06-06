@@ -27342,17 +27342,16 @@ var script = {
           this.controls = controls;
           this.isLoading = false;
           this.$emit("load", {
-            scanner: this.$refs.scanner,
             controls: this.controls,
-            error: error,
             scannerElement: this.$refs.scanner,
-            scannerMultiFormatReader: this.codeScanner
+            browserMultiFormatReader: this.codeScanner
           });
         }
 
         if (!result) return;
         this.$emit("scan", {
-          result: result
+          result: result.text,
+          raw: result
         });
       });
     }
@@ -27525,8 +27524,8 @@ var __vue_staticRenderFns__ = [];
 
 const __vue_inject_styles__ = function (inject) {
   if (!inject) return;
-  inject("data-v-f137bdaa_0", {
-    source: "video[data-v-f137bdaa]{max-width:100%;max-height:100%}.scanner-container[data-v-f137bdaa]{position:relative}.overlay-element[data-v-f137bdaa]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-f137bdaa]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-f137bdaa 2s infinite;animation:scanning-data-v-f137bdaa 2s infinite}@-webkit-keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
+  inject("data-v-18ed1524_0", {
+    source: "video[data-v-18ed1524]{max-width:100%;max-height:100%}.scanner-container[data-v-18ed1524]{position:relative}.overlay-element[data-v-18ed1524]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-18ed1524]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-18ed1524 2s infinite;animation:scanning-data-v-18ed1524 2s infinite}@-webkit-keyframes scanning-data-v-18ed1524{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-18ed1524{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
     map: undefined,
     media: undefined
   });
@@ -27534,7 +27533,7 @@ const __vue_inject_styles__ = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__ = "data-v-f137bdaa";
+const __vue_scope_id__ = "data-v-18ed1524";
 /* module identifier */
 
 const __vue_module_identifier__ = undefined;
