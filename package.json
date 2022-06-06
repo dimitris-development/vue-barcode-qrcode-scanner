@@ -1,6 +1,6 @@
 {
   "name": "vue-barcode-qrcode-scanner",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Vue 2 barcode/QR scanner based on https://github.com/olefirenko/vue-barcode-reader",
   "main": "dist/vue-barcode-qrcode-scanner.ssr.js",
   "browser": "dist/vue-barcode-qrcode-scanner.esm.js",
