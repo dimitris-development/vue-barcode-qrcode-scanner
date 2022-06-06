@@ -11,7 +11,7 @@
 <script>
 import { BrowserMultiFormatReader } from "@zxing/browser";
 export default {
-  name: "StreamBarcodeScanner",
+  name: "CameraCodeScanner",
   data() {
     return {
       isLoading: true,
@@ -23,34 +23,42 @@ export default {
       controls: "",
     };
   },
-  emits: ["loaded", "scan"],
+  emits: ["load", "scan"],
   mounted() {
     if (!this.isMediaStreamAPISupported) {
       throw new Exception("Media Stream API is not supported");
     }
+
     this.start();
-    this.$refs.scanner.oncanplay = (event) => {
-      this.isLoading = false;
-      this.$emit("loaded");
-    };
   },
   beforeDestroy() {
-    this.stop();
+    this.controls.stop();
   },
   methods: {
     async start() {
-      this.controls = await this.codeScanner.decodeFromVideoDevice(
+      await this.codeScanner.decodeFromVideoDevice(
         undefined,
         this.$refs.scanner,
         (result, error, controls) => {
-          if (result) {
-            this.$emit("scan", result.text);
+          if (this.isLoading) {
+            this.controls = controls;
+            this.isLoading = false;
+
+            this.$emit("load", {
+              scanner: this.$refs.scanner,
+              controls: this.controls,
+              error: error,
+              scannerElement: this.$refs.scanner,
+              scannerMultiFormatReader: this.codeScanner,
+            });
           }
+
+          if (!result) return;
+          this.$emit("scan", {
+            result: result,
+          });
         }
       );
-    },
-    stop() {
-      this.controls.stop();
     },
   },
 };

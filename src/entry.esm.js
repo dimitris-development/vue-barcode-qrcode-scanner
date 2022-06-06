@@ -3,7 +3,6 @@ import * as components from "@/lib-components/index";
 
 // install function executed by Vue.use()
 const install = function installVueBarcodeScanner(Vue) {
-  console.log(Vue);
   Object.entries(components).forEach(([componentName, component]) => {
     Vue.component(componentName, component);
   });
