@@ -27374,31 +27374,65 @@ var BrowserMultiFormatReader = /** @class */ (function (_super) {
         return _super.call(this, new QRCodeReader(), hints, options) || this;
     }
     return BrowserQRCodeReader;
-})(BrowserCodeReader));//
-var script$1 = {
-  name: "ImageBarcodeScanner",
+})(BrowserCodeReader));var script = {
+  name: "CameraCodeScanner",
   data: function data() {
     return {
-      codeReader: new BrowserMultiFormatReader()
+      isLoading: true,
+      codeScanner: new BrowserMultiFormatReader(),
+      isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
+      controls: ""
     };
   },
+  emits: ["load", "scan"],
+  mounted: function mounted() {
+    if (!this.isMediaStreamAPISupported) {
+      throw new Exception("Media Stream API is not supported");
+    }
+
+    this.start();
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.controls.stop();
+  },
   methods: {
-    onChangeInput: function onChangeInput(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      var reader = new FileReader();
-      reader.onload = this.processFile;
-      reader.readAsDataURL(files[0]);
-    },
-    processFile: function processFile(e) {
+    start: function start() {
       var _this = this;
 
-      this.$el.innerHTML += "<img id=\"image\" src=\"".concat(e.target.result, "\"/>");
-      this.codeReader.decodeFromImage("image").then(function (result) {
-        return _this.$emit("decode", result.text);
-      }).catch(function (error) {
-        return _this.$emit("error", error);
-      });
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.codeScanner.decodeFromVideoDevice(undefined, _this.$refs.scanner, function (result, error, controls) {
+                  if (_this.isLoading) {
+                    _this.controls = controls;
+                    _this.isLoading = false;
+
+                    _this.$emit("load", {
+                      scanner: _this.$refs.scanner,
+                      controls: _this.controls,
+                      error: error,
+                      scannerElement: _this.$refs.scanner,
+                      scannerMultiFormatReader: _this.codeScanner
+                    });
+                  }
+
+                  if (!result) return;
+
+                  _this.$emit("scan", {
+                    result: result
+                  });
+                });
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     }
   }
 };function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -27474,115 +27508,7 @@ var script$1 = {
         }
     }
     return script;
-}/* script */
-var __vue_script__$1 = script$1;
-/* template */
-
-var __vue_render__$1 = function __vue_render__() {
-  var _vm = this;
-
-  var _h = _vm.$createElement;
-
-  var _c = _vm._self._c || _h;
-
-  return _c('input', {
-    attrs: {
-      "type": "file",
-      "name": "image",
-      "accept": "image/*",
-      "capture": "environment"
-    },
-    on: {
-      "change": _vm.onChangeInput
-    }
-  }, []);
-};
-
-var __vue_staticRenderFns__$1 = [];
-/* style */
-
-var __vue_inject_styles__$1 = undefined;
-/* scoped */
-
-var __vue_scope_id__$1 = undefined;
-/* module identifier */
-
-var __vue_module_identifier__$1 = "data-v-65610c4a";
-/* functional template */
-
-var __vue_is_functional_template__$1 = false;
-/* style inject */
-
-/* style inject SSR */
-
-/* style inject shadow dom */
-
-var __vue_component__$2 = /*#__PURE__*/normalizeComponent({
-  render: __vue_render__$1,
-  staticRenderFns: __vue_staticRenderFns__$1
-}, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
-
-var __vue_component__$3 = __vue_component__$2;var script = {
-  name: "StreamBarcodeScanner",
-  data: function data() {
-    return {
-      isLoading: true,
-      codeScanner: new BrowserMultiFormatReader(),
-      isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
-      controls: ""
-    };
-  },
-  emits: ["loaded", "scan"],
-  mounted: function mounted() {
-    var _this = this;
-
-    if (!this.isMediaStreamAPISupported) {
-      throw new Exception("Media Stream API is not supported");
-    }
-
-    this.start();
-
-    this.$refs.scanner.oncanplay = function (event) {
-      _this.isLoading = false;
-
-      _this.$emit("loaded");
-    };
-  },
-  beforeDestroy: function beforeDestroy() {
-    this.stop();
-  },
-  methods: {
-    start: function start() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return _this2.codeScanner.decodeFromVideoDevice(undefined, _this2.$refs.scanner, function (result, error, controls) {
-                  if (result) {
-                    _this2.$emit("scan", result.text);
-                  }
-                });
-
-              case 2:
-                _this2.controls = _context.sent;
-
-              case 3:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    stop: function stop() {
-      this.controls.stop();
-    }
-  }
-};function createInjectorSSR(context) {
+}function createInjectorSSR(context) {
     if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
         context = __VUE_SSR_CONTEXT__;
     }
@@ -27637,7 +27563,7 @@ var __vue_render__ = function __vue_render__() {
     staticClass: "scanner-container"
   }, [_vm._ssrNode("<div" + _vm._ssrStyle(null, null, {
     display: !_vm.isLoading ? '' : 'none'
-  }) + " data-v-f733c400><video poster=\"data:image/gif,AAAA\" data-v-f733c400></video> <div class=\"overlay-element\" data-v-f733c400></div> <div class=\"laser\" data-v-f733c400></div></div>")]);
+  }) + " data-v-f137bdaa><video poster=\"data:image/gif,AAAA\" data-v-f137bdaa></video> <div class=\"overlay-element\" data-v-f137bdaa></div> <div class=\"laser\" data-v-f137bdaa></div></div>")]);
 };
 
 var __vue_staticRenderFns__ = [];
@@ -27645,8 +27571,8 @@ var __vue_staticRenderFns__ = [];
 
 var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-f733c400_0", {
-    source: "video[data-v-f733c400]{max-width:100%;max-height:100%}.scanner-container[data-v-f733c400]{position:relative}.overlay-element[data-v-f733c400]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-f733c400]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-f733c400 2s infinite;animation:scanning-data-v-f733c400 2s infinite}@-webkit-keyframes scanning-data-v-f733c400{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-f733c400{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
+  inject("data-v-f137bdaa_0", {
+    source: "video[data-v-f137bdaa]{max-width:100%;max-height:100%}.scanner-container[data-v-f137bdaa]{position:relative}.overlay-element[data-v-f137bdaa]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-f137bdaa]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-f137bdaa 2s infinite;animation:scanning-data-v-f137bdaa 2s infinite}@-webkit-keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
     map: undefined,
     media: undefined
   });
@@ -27654,10 +27580,10 @@ var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__ = "data-v-f733c400";
+var __vue_scope_id__ = "data-v-f137bdaa";
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-f733c400";
+var __vue_module_identifier__ = "data-v-f137bdaa";
 /* functional template */
 
 var __vue_is_functional_template__ = false;
@@ -27668,8 +27594,7 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, createInjectorSSR, undefined);
 
-var __vue_component__$1 = __vue_component__;/* eslint-disable import/prefer-default-export */var components$1=/*#__PURE__*/Object.freeze({__proto__:null,ImageBarcodeScanner:__vue_component__$3,StreamBarcodeScanner:__vue_component__$1});var install = function installVueBarcodeScanner(Vue) {
-  console.log(Vue);
+var __vue_component__$1 = __vue_component__;/* eslint-disable import/prefer-default-export */var components$1=/*#__PURE__*/Object.freeze({__proto__:null,CameraCodeScanner:__vue_component__$1});var install = function installVueBarcodeScanner(Vue) {
   Object.entries(components$1).forEach(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
         componentName = _ref2[0],
@@ -27678,7 +27603,7 @@ var __vue_component__$1 = __vue_component__;/* eslint-disable import/prefer-defa
     Vue.component(componentName, component);
   });
 }; // Create module definition for Vue.use()
-var components=/*#__PURE__*/Object.freeze({__proto__:null,'default':install,ImageBarcodeScanner:__vue_component__$3,StreamBarcodeScanner:__vue_component__$1});// only expose one global var, with component exports exposed as properties of
+var components=/*#__PURE__*/Object.freeze({__proto__:null,'default':install,CameraCodeScanner:__vue_component__$1});// only expose one global var, with component exports exposed as properties of
 // that global var (eg. plugin.component)
 
 Object.entries(components).forEach(function (_ref) {

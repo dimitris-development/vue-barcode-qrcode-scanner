@@ -27309,27 +27309,52 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })(BrowserCodeReader));
 
 //
-var script$1 = {
-  name: "ImageBarcodeScanner",
+var script = {
+  name: "CameraCodeScanner",
 
   data() {
     return {
-      codeReader: new BrowserMultiFormatReader()
+      isLoading: true,
+      codeScanner: new BrowserMultiFormatReader(),
+      isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
+      controls: ""
     };
   },
 
-  methods: {
-    onChangeInput(e) {
-      const files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      const reader = new FileReader();
-      reader.onload = this.processFile;
-      reader.readAsDataURL(files[0]);
-    },
+  emits: ["load", "scan"],
 
-    processFile(e) {
-      this.$el.innerHTML += `<img id="image" src="${e.target.result}"/>`;
-      this.codeReader.decodeFromImage("image").then(result => this.$emit("decode", result.text)).catch(error => this.$emit("error", error));
+  mounted() {
+    if (!this.isMediaStreamAPISupported) {
+      throw new Exception("Media Stream API is not supported");
+    }
+
+    this.start();
+  },
+
+  beforeDestroy() {
+    this.controls.stop();
+  },
+
+  methods: {
+    async start() {
+      await this.codeScanner.decodeFromVideoDevice(undefined, this.$refs.scanner, (result, error, controls) => {
+        if (this.isLoading) {
+          this.controls = controls;
+          this.isLoading = false;
+          this.$emit("load", {
+            scanner: this.$refs.scanner,
+            controls: this.controls,
+            error: error,
+            scannerElement: this.$refs.scanner,
+            scannerMultiFormatReader: this.codeScanner
+          });
+        }
+
+        if (!result) return;
+        this.$emit("scan", {
+          result: result
+        });
+      });
     }
 
   }
@@ -27409,104 +27434,6 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
     }
     return script;
 }
-
-/* script */
-const __vue_script__$1 = script$1;
-/* template */
-
-var __vue_render__$1 = function () {
-  var _vm = this;
-
-  var _h = _vm.$createElement;
-
-  var _c = _vm._self._c || _h;
-
-  return _c('input', {
-    attrs: {
-      "type": "file",
-      "name": "image",
-      "accept": "image/*",
-      "capture": "environment"
-    },
-    on: {
-      "change": _vm.onChangeInput
-    }
-  });
-};
-
-var __vue_staticRenderFns__$1 = [];
-/* style */
-
-const __vue_inject_styles__$1 = undefined;
-/* scoped */
-
-const __vue_scope_id__$1 = undefined;
-/* module identifier */
-
-const __vue_module_identifier__$1 = undefined;
-/* functional template */
-
-const __vue_is_functional_template__$1 = false;
-/* style inject */
-
-/* style inject SSR */
-
-/* style inject shadow dom */
-
-const __vue_component__$2 = /*#__PURE__*/normalizeComponent({
-  render: __vue_render__$1,
-  staticRenderFns: __vue_staticRenderFns__$1
-}, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
-
-var __vue_component__$3 = __vue_component__$2;
-
-//
-var script = {
-  name: "StreamBarcodeScanner",
-
-  data() {
-    return {
-      isLoading: true,
-      codeScanner: new BrowserMultiFormatReader(),
-      isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
-      controls: ""
-    };
-  },
-
-  emits: ["loaded", "scan"],
-
-  mounted() {
-    if (!this.isMediaStreamAPISupported) {
-      throw new Exception("Media Stream API is not supported");
-    }
-
-    this.start();
-
-    this.$refs.scanner.oncanplay = event => {
-      this.isLoading = false;
-      this.$emit("loaded");
-    };
-  },
-
-  beforeDestroy() {
-    this.stop();
-  },
-
-  methods: {
-    async start() {
-      this.controls = await this.codeScanner.decodeFromVideoDevice(undefined, this.$refs.scanner, (result, error, controls) => {
-        if (result) {
-          this.$emit("scan", result.text);
-        }
-      });
-    },
-
-    stop() {
-      this.controls.stop();
-    }
-
-  }
-};
 
 const isOldIE = typeof navigator !== 'undefined' &&
     /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
@@ -27598,8 +27525,8 @@ var __vue_staticRenderFns__ = [];
 
 const __vue_inject_styles__ = function (inject) {
   if (!inject) return;
-  inject("data-v-f733c400_0", {
-    source: "video[data-v-f733c400]{max-width:100%;max-height:100%}.scanner-container[data-v-f733c400]{position:relative}.overlay-element[data-v-f733c400]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-f733c400]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-f733c400 2s infinite;animation:scanning-data-v-f733c400 2s infinite}@-webkit-keyframes scanning-data-v-f733c400{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-f733c400{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
+  inject("data-v-f137bdaa_0", {
+    source: "video[data-v-f137bdaa]{max-width:100%;max-height:100%}.scanner-container[data-v-f137bdaa]{position:relative}.overlay-element[data-v-f137bdaa]{position:absolute;top:0;width:100%;height:99%;background:rgba(30,30,30,.5);-webkit-clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0);clip-path:polygon(0 0,0 100%,20% 100%,20% 20%,80% 20%,80% 80%,20% 80%,20% 100%,100% 100%,100% 0)}.laser[data-v-f137bdaa]{width:60%;margin-left:20%;background-color:tomato;height:1px;position:absolute;top:40%;z-index:2;box-shadow:0 0 4px red;-webkit-animation:scanning-data-v-f137bdaa 2s infinite;animation:scanning-data-v-f137bdaa 2s infinite}@-webkit-keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}@keyframes scanning-data-v-f137bdaa{50%{-webkit-transform:translateY(75px);transform:translateY(75px)}}",
     map: undefined,
     media: undefined
   });
@@ -27607,7 +27534,7 @@ const __vue_inject_styles__ = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__ = "data-v-f733c400";
+const __vue_scope_id__ = "data-v-f137bdaa";
 /* module identifier */
 
 const __vue_module_identifier__ = undefined;
@@ -27629,18 +27556,16 @@ var __vue_component__$1 = __vue_component__;
 
 var components = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  ImageBarcodeScanner: __vue_component__$3,
-  StreamBarcodeScanner: __vue_component__$1
+  CameraCodeScanner: __vue_component__$1
 });
 
 // Import vue components
 
 const install = function installVueBarcodeScanner(Vue) {
-  console.log(Vue);
   Object.entries(components).forEach(_ref => {
     let [componentName, component] = _ref;
     Vue.component(componentName, component);
   });
 }; // Create module definition for Vue.use()
 
-export { __vue_component__$3 as ImageBarcodeScanner, __vue_component__$1 as StreamBarcodeScanner, install as default };
+export { __vue_component__$1 as CameraCodeScanner, install as default };
