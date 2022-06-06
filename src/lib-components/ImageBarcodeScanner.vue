@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { BrowserMultiFormatReader } from "@zxing/library";
+import { BrowserMultiFormatReader } from "@zxing/browser";
 export default {
   name: "ImageBarcodeScanner",
   data() {

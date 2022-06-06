@@ -1,16 +1,12 @@
 <script>
 import Vue from "vue";
-import ImageBarcodeScanner from "../src/lib-components/ImageBarcodeScanner.vue";
-import StreamBarcodeScanner from "../src/lib-components/StreamBarcodeScanner.vue";
+import { ImageBarcodeScanner, StreamBarcodeScanner } from "@/entry.esm";
+
 // Uncomment import and local "components" registration if library is not registered globally.
-// import { ImageBarcodeScanner } from "@/entry.esm";
 
 export default Vue.extend({
   components: { ImageBarcodeScanner, StreamBarcodeScanner },
   name: "ServeDev",
-  // components: {
-  //   ImageBarcodeScanner,
-  // },
 });
 </script>
 

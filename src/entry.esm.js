@@ -3,6 +3,7 @@ import * as components from "@/lib-components/index";
 
 // install function executed by Vue.use()
 const install = function installVueBarcodeScanner(Vue) {
+  console.log(Vue);
   Object.entries(components).forEach(([componentName, component]) => {
     Vue.component(componentName, component);
   });
@@ -13,4 +14,4 @@ export default install;
 
 // To allow individual component use, export components
 // each can be registered via Vue.component()
-export { components } from "@/lib-components/index";
+export * from "@/lib-components/index";
