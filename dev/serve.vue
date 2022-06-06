@@ -14,12 +14,12 @@ export default Vue.extend({
     };
   },
   methods: {
-    onScan({ result }) {
-      console.log(result);
+    onScan({ result, raw }) {
+      console.log(result, raw);
       this.shouldScan = false;
     },
-    onLoad({ controls, error, scannerElement, scannerMultiFormatReader }) {
-      console.log(controls, error, scannerElement, scannerMultiFormatReader);
+    onLoad({ controls, scannerElement, browserMultiFormatReader }) {
+      console.log(controls, scannerElement, browserMultiFormatReader);
       this.controls = controls;
     },
   },

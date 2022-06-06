@@ -46,15 +46,15 @@ export default {
 
             this.$emit("load", {
               controls: this.controls,
-              error: error,
               scannerElement: this.$refs.scanner,
-              scannerMultiFormatReader: this.codeScanner,
+              browserMultiFormatReader: this.codeScanner,
             });
           }
 
           if (!result) return;
           this.$emit("scan", {
-            result: result,
+            result: result.text,
+            raw: result,
           });
         }
       );
