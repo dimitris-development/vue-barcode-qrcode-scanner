@@ -1,11 +1,11 @@
 {
-  "name": "vue-barcode-scanner",
+  "name": "vue-barcode-qrcode-scanner",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/vue-barcode-scanner.ssr.js",
-  "browser": "dist/vue-barcode-scanner.esm.js",
-  "module": "dist/vue-barcode-scanner.esm.js",
-  "unpkg": "dist/vue-barcode-scanner.min.js",
+  "description": "A Vue 2 barcode/QR scanner based on https://github.com/olefirenko/vue-barcode-reader",
+  "main": "dist/vue-barcode-qrcode-scanner.ssr.js",
+  "browser": "dist/vue-barcode-qrcode-scanner.esm.js",
+  "module": "dist/vue-barcode-qrcode-scanner.esm.js",
+  "unpkg": "dist/vue-barcode-qrcode-scanner.min.js",
   "files": [
     "dist/*",
     "src/**/*.vue"
