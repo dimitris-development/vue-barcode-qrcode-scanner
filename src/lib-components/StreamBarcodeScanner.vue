@@ -9,17 +9,18 @@
 </template>
 
 <script>
-import { BrowserMultiFormatReader, Exception } from "@zxing/library";
+import { BrowserMultiFormatReader, Exception } from "@zxing/browser";
 export default {
   name: "StreamBarcodeScanner",
   data() {
     return {
       isLoading: true,
-      codeReader: new BrowserMultiFormatReader(),
+      codeScanner: new BrowserMultiFormatReader(),
       isMediaStreamAPISupported:
         navigator &&
         navigator.mediaDevices &&
         "enumerateDevices" in navigator.mediaDevices,
+      controls: "",
     };
   },
   emits: ["loaded", "scan"],
@@ -34,19 +35,22 @@ export default {
     };
   },
   beforeDestroy() {
-    this.codeReader.reset();
+    this.stop();
   },
   methods: {
-    start() {
-      this.codeReader.decodeFromVideoDevice(
+    async start() {
+      this.controls = await this.codeScanner.decodeFromVideoDevice(
         undefined,
         this.$refs.scanner,
-        (result, err) => {
+        (result, error, controls) => {
           if (result) {
             this.$emit("scan", result.text);
           }
         }
       );
+    },
+    stop() {
+      this.controls.stop();
     },
   },
 };

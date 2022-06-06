@@ -20,6 +20,7 @@
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
   },
   "dependencies": {
+    "@zxing/browser": "^0.1.1",
     "@zxing/library": "^0.19.1"
   },
   "devDependencies": {
