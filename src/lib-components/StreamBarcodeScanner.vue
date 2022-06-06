@@ -22,10 +22,10 @@ export default {
         "enumerateDevices" in navigator.mediaDevices,
     };
   },
+  emits: ["loaded", "scan"],
   mounted() {
     if (!this.isMediaStreamAPISupported) {
       throw new Exception("Media Stream API is not supported");
-      return;
     }
     this.start();
     this.$refs.scanner.oncanplay = (event) => {
@@ -33,7 +33,7 @@ export default {
       this.$emit("loaded");
     };
   },
-  beforeUnmount() {
+  beforeDestroy() {
     this.codeReader.reset();
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
         this.$refs.scanner,
         (result, err) => {
           if (result) {
-            this.$emit("decode", result.text);
+            this.$emit("scan", result.text);
           }
         }
       );
