@@ -45,7 +45,6 @@ export default {
             this.isLoading = false;
 
             this.$emit("load", {
-              scanner: this.$refs.scanner,
               controls: this.controls,
               error: error,
               scannerElement: this.$refs.scanner,

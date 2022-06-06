@@ -18,20 +18,8 @@ export default Vue.extend({
       console.log(result);
       this.shouldScan = false;
     },
-    onLoad({
-      scanner,
-      controls,
-      error,
-      scannerElement,
-      scannerMultiFormatReader,
-    }) {
-      console.log(
-        scanner,
-        controls,
-        error,
-        scannerElement,
-        scannerMultiFormatReader
-      );
+    onLoad({ controls, error, scannerElement, scannerMultiFormatReader }) {
+      console.log(controls, error, scannerElement, scannerMultiFormatReader);
       this.controls = controls;
     },
   },
