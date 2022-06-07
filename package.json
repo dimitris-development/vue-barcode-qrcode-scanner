@@ -1,6 +1,6 @@
 {
   "name": "vue-barcode-qrcode-scanner",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "A Vue 2 barcode/QR scanner based on https://github.com/olefirenko/vue-barcode-reader",
   "author": {
     "name": "Dimitris Collier",
@@ -10,10 +10,18 @@
     "vue",
     "vue2",
     "zxing",
+    "zxingjs",
+    "zxing-browser",
     "barcode",
     "qrcode",
+    "barcode scanner",
+    "qrcode scanner",
+    "barcode reader",
+    "qrcode reader",
     "barcode-scanner",
-    "qrcode-scanner"
+    "qrcode-scanner",
+    "barcode-reader",
+    "qrcode-reader"
   ],
   "repository": {
     "type": "git",
