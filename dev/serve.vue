@@ -11,7 +11,17 @@ export default Vue.extend({
     return {
       shouldScan: true,
       controls: "",
+      camera: "front",
     };
+  },
+  mounted() {
+    setInterval(() => {
+      if (this.camera === "front") {
+        this.camera = "back";
+      } else {
+        this.camera = "front";
+      }
+    }, 5000);
   },
   methods: {
     onScan({ result, raw }) {
@@ -28,6 +38,11 @@ export default Vue.extend({
 
 <template>
   <div id="app">
-    <CameraCodeScanner v-if="shouldScan" @load="onLoad" @scan="onScan" />
+    <CameraCodeScanner
+      v-if="shouldScan"
+      :camera="camera"
+      @load="onLoad"
+      @scan="onScan"
+    />
   </div>
 </template>

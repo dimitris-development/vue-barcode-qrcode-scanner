@@ -12,14 +12,16 @@
 import { BrowserMultiFormatReader } from "@zxing/browser";
 export default {
   name: "CameraCodeScanner",
+  props: {
+    camera: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       isLoading: true,
       codeScanner: new BrowserMultiFormatReader(),
-      isMediaStreamAPISupported:
-        navigator &&
-        navigator.mediaDevices &&
-        "enumerateDevices" in navigator.mediaDevices,
       controls: "",
     };
   },
@@ -34,30 +36,65 @@ export default {
   beforeDestroy() {
     this.controls.stop();
   },
-  methods: {
-    async start() {
-      await this.codeScanner.decodeFromVideoDevice(
-        undefined,
-        this.$refs.scanner,
-        (result, error, controls) => {
-          if (this.isLoading) {
-            this.controls = controls;
-            this.isLoading = false;
-
-            this.$emit("load", {
-              controls: this.controls,
-              scannerElement: this.$refs.scanner,
-              browserMultiFormatReader: this.codeScanner,
-            });
-          }
-
-          if (!result) return;
-          this.$emit("scan", {
-            result: result.text,
-            raw: result,
-          });
-        }
+  computed: {
+    isMediaStreamAPISupported() {
+      return (
+        navigator &&
+        navigator.mediaDevices &&
+        "enumerateDevices" in navigator.mediaDevices
       );
+    },
+    constraints() {
+      if (this.camera === "front") return { video: { facingMode: "user" } };
+      else if (this.camera === "back")
+        return { video: { facingMode: "enviroment" } };
+      return "";
+      console.log(this.constraints);
+    },
+  },
+  methods: {
+    start() {
+      if (this.constraints) {
+        console.log(this.constraints);
+        this.codeScanner.decodeFromConstraints(
+          this.constraints,
+          this.$refs.scanner,
+          this.callback
+        );
+      } else {
+        this.codeScanner.decodeFromVideoDevice(
+          undefined,
+          this.$refs.scanner,
+          this.callback
+        );
+      }
+    },
+    callback(result, error, controls) {
+      if (this.isLoading) {
+        this.controls = controls;
+        this.isLoading = false;
+
+        this.$emit("load", {
+          controls: this.controls,
+          scannerElement: this.$refs.scanner,
+          browserMultiFormatReader: this.codeScanner,
+        });
+      }
+
+      if (!result) return;
+      this.$emit("scan", {
+        result: result.text,
+        raw: result,
+      });
+    },
+  },
+  watch: {
+    camera(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.isLoading = true;
+        this.controls.stop();
+        this.start();
+      }
     },
   },
 };
