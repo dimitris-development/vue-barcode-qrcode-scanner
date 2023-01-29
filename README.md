@@ -112,14 +112,12 @@ to contribute just follow these steps:
 
    ```sh
    npm init
-   npm run serve
    ```
 
    Or
 
    ```sh
    yarn
-   yarn serve
    ```
 
    and commit whatever changes you want to make.
@@ -136,8 +134,4 @@ to contribute just follow these steps:
    yarn build
    ```
 
-to build the library and commit it as well
-
-4. Push your work back to your fork
-
-5. Submit a PR so that I can review your changes.
+to build the library and submit a PR
