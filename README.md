@@ -3,8 +3,7 @@
 This is a Vue 2 barcode/QR code scanner based on https://github.com/olefirenko/vue-barcode-reader.
 
 In [olefirenko's](https://github.com/olefirenko/) repo there are a few issues that haven't been addressed nor fixed for over a year now, so I decided to rewrite StreamBarcodeReader and fix a few issues I found.
-This was meant to be a fork, however due to the inactivity of that repo,
-I decided to create a seperate library.
+This was meant to be a fork however due to the inactivity of that repo and because I need to make a lot of changes, I decided to create a new repo instead.
 
 ## Installation
 
@@ -91,14 +90,14 @@ methods: {
 
 ## Fixes
 
-1. According to [Issue 33 in ZXing Browser](https://github.com/zxing-js/browser/issues/33#issuecomment-771716556) I are supposed to use ZXing Browser's BrowserMultiFormatReader in the Browser Layer and not ZXing-JS Library.
+1. According to [Issue 33 in ZXing Browser](https://github.com/zxing-js/browser/issues/33#issuecomment-771716556) we are supposed to use ZXing Browser's BrowserMultiFormatReader in the Browser Layer and not ZXing-JS Library.
    ZXing Browser provides an intuitive API to
    scan anything and is currently being maintained and actively improved upon.
    However using ZXing Library for the Browser Layer is deprecated.
    This change also fixes the "Trying to play video that is already playing." warning.
 
 2. [Issue 19 in vue-barcode-reader](https://github.com/olefirenko/vue-barcode-reader/issues/19) states that even though the video component has been destroyed the camera is still on. This is due to beforeUnmount option not existing prior to Vue 3.2.7.
-   I are using beforeDestroy instead for Vue 2 support.
+   I'm using beforeDestroy instead for Vue 2 support.
 
 3. vue-barcode-reader isn't minified by default and contributions aren't easy make due to the absence of development scripts, so I compiled the library with [vue-sfc-rollup](https://github.com/team-innovation/vue-sfc-rollup) and [Vue CLI](https://cli.vuejs.org/)
 
