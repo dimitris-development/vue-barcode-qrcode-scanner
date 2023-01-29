@@ -7,7 +7,7 @@ This was meant to be a fork however due to the inactivity of that repo and becau
 
 ## Installation
 
-The easiest way to use Vue 2 Barcode and QR code scanner is to install it from **npm** or **yarn**.
+The easiest way to install Vue 2 Barcode and QR code scanner is to install it with **npm** or **yarn**.
 
 ```sh
 npm install vue-barcode-qrcode-scanner --save
@@ -21,7 +21,7 @@ yarn add vue-barcode-qrcode-scanner
 
 ## Usage
 
-The Vue Barcode and QR code scanner works out of the box by just including it.
+To use the Vue 2 Barcode and QR code scanner just import it into your project
 
 ### Scanning from Video Camera
 
@@ -31,7 +31,7 @@ Once a stream from the users camera is loaded, it is displayed and continuously 
 import { CameraCodeScanner } from "vue-barcode-qrcode-scanner";
 ```
 
-In your template you can use this syntax:
+In your template you can use the following syntax:
 
 ```html
 <CameraCodeScanner @scan="onScan" @load="onLoad"></CameraCodeScanner>
